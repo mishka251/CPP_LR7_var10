@@ -48,42 +48,41 @@ public:
         }
     }
 
-    int getHeight(){
-        int h = 1;
+    int getElementsCount(){
+        int count = 1;
         if(this->left!= nullptr){
-            h = this->left->getHeight()+1;
+            count += this->left->getElementsCount();
         }
         if(this->right!= nullptr){
-            int rightHeight = this->right->getHeight();
-            if (rightHeight+1>h){
-                h = rightHeight+1;
-            }
+            count += this->right->getElementsCount();
         }
-        return h;
+        return count;
     }
 
-    void printLongestPath(){
-        std::cout<<this->value << "  ";
-        bool nextRight = (this->right != nullptr && (this->left== nullptr || this->right->getHeight() >= this->left->getHeight()));
-
-        bool nextLeft = (this->left != nullptr && (this->right== nullptr || this->right->getHeight() < this->left->getHeight()));
-        if(nextRight){
-            this->right->printLongestPath();
+    int leftCount(){
+        if(this->left == nullptr){
+            return 0;
         }
-        if(nextLeft){
-            this->left->printLongestPath();
-        }
+        return this->left->getElementsCount();
     }
 
-    void symmetricTree(){
-        TreeNode*tmp = this->left;
-        this->left = this->right;
-        this->right = tmp;
-        if(this->right){
-            this->right->symmetricTree();
+    int rightCount(){
+        if(this->right == nullptr){
+            return 0;
         }
-        if(this->left){
-            this->left->symmetricTree();
+        return this->right->getElementsCount();
+    }
+
+    void printElementsWithDifferentHeight(){
+        if(this->leftCount() != this-> rightCount()){
+            std::cout<<this->value<<std::endl;
+        }
+        if(this->right!= nullptr){
+            this->right->printElementsWithDifferentHeight();
+        }
+
+        if(this->left!= nullptr){
+            this->left->printElementsWithDifferentHeight();
         }
     }
 };
@@ -109,14 +108,9 @@ int main() {
     std::cout<<"Tree"<<std::endl;
     root->print();
 
-    std::cout<<"longest path"<<std::endl;
-    root->printLongestPath();
+    std::cout<<"Elements with different elements count"<<std::endl;
+    root->printElementsWithDifferentHeight();
     std::cout<<std::endl;
-
-    root->symmetricTree();
-
-    std::cout<<"Symmetric Tree"<<std::endl;
-    root->print();
 
     return 0;
 }
